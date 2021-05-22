@@ -1,0 +1,11 @@
+/* Webfont: IranianSans */@font-face {
+    font-family: 'IranianSans';
+    src: url('IranianSans.eot'); /* IE9 Compat Modes */
+    src: url('IranianSans.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('IranianSans.woff') format('woff'), /* Modern Browsers */
+         url('IranianSans.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('IranianSans.svg#IranianSans') format('svg'); /* Legacy iOS */
+    font-style: normal;
+    font-weight: normal;
+}
+

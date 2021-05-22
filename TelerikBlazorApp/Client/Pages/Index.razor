@@ -1,0 +1,263 @@
+﻿@page "/"
+@using TelerikBlazorApp.Shared
+@inject TelerikBlazorApp.Client.Services.IDashboardService dashboardServive
+
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-flex flex-column mb-4">
+        <h1 class="h3 mb-0 text-gray-800 text-right">داشبورد</h1>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row">
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-right-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                درآمد ماهانه
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@MonthEarning</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-right-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                درآمد سالانه
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@YearEarning</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-right-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col-auto">
+                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                        </div>
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                تعداد فروش
+                            </div>
+                            <div class="row no-gutters align-items-center">
+
+                                <div class="col-auto">
+                                    <div class="h5 mb-0 ml-2 font-weight-bold text-gray-800">@CountBuy</div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Requests Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-right-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col-auto">
+                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                        </div>
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                تعداد فروش کالا
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Total</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row">
+        @* Content Column*@ 
+        <div class="col-lg-6">
+            @* Project Card Example*@ 
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">کالاهای خریداری شده</h6>
+                </div>
+                <div class="card-body">
+                    <TelerikChart>
+                        <ChartCategoryAxes>
+                            <ChartCategoryAxis BaseUnit="ChartCategoryAxisBaseUnit.Fit" Type="ChartCategoryAxisType.Date"></ChartCategoryAxis>
+                            <ChartCategoryAxisLabels Format="{0:d MMM}">
+                                <ChartCategoryAxisLabelsRotation Angle="@LabelsRotation" />
+                            </ChartCategoryAxisLabels>
+                            <ChartCategoryAxisMajorGridLines Visible="false" />
+                            <ChartCategoryAxisMajorTicks Visible="false" />
+                        </ChartCategoryAxes>
+                        <ChartSeriesItems>
+                            <ChartSeries Type="ChartSeriesType.Line" Name=" کالاهای خریداری شده" Data="@ListBuys"
+                                         Field="@nameof(ProductViewModel.BuyCount)" CategoryField="@nameof(ProductViewModel.Date)" Aggregate="ChartSeriesAggregate.Sum">
+                                <ChartSeriesLabels Visible="true"></ChartSeriesLabels>
+                            </ChartSeries>
+                            <ChartLegend Position="Telerik.Blazor.ChartLegendPosition.Bottom">
+                            </ChartLegend>
+                        </ChartSeriesItems>
+                    </TelerikChart>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">خریدهای انجام شده</h6>
+                </div>
+                <div class="card-body">
+                    <TelerikChart>
+                        <ChartSeriesItems>
+                            <ChartSeries Type="ChartSeriesType.Column" Name="تعداد خرید انجام شده" Data="@ListBuys"
+                                         Aggregate="@ChartSeriesAggregate.Count"
+                                         Color="#4e73df"
+                                         Field="@nameof(ProductViewModel.BuyCount)" CategoryField="@nameof(ProductViewModel.Category)">
+                                <ChartSeriesTooltip Visible="true">
+                                    <Template>
+
+                                        تعداد  خرید انجام شده: @( (context.DataItem as ProductViewModel).BuyCount.ToString("N0") )
+                                    </Template>
+                                </ChartSeriesTooltip>
+                            </ChartSeries>
+                            <ChartLegend Position="Telerik.Blazor.ChartLegendPosition.Bottom">
+                            </ChartLegend>
+                        </ChartSeriesItems>
+                    </TelerikChart>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 mb-4">
+                <TelerikGrid Class="k-rtl" Data="@ListBuys" Height="400px"
+                             Pageable="true" Sortable="true" Groupable="true"
+                             TotalCount=@CountBuy
+                             FilterMode="Telerik.Blazor.GridFilterMode.FilterRow"
+                             Resizable="true" Reorderable="true">
+                    <GridColumns>
+                        <GridColumn Field="@(nameof(ProductViewModel.Name))" Title="عنوان" />
+                        <GridColumn Field="@(nameof(ProductViewModel.Number))" Title="شماره" />
+                        <GridColumn Field="@(nameof(ProductViewModel.Price))" Title="قیمت" />
+                      
+                        <GridColumn Field=@nameof(ProductViewModel.Date) Title="تاریخ" Editable="false">
+                            <Template>
+                                @((context as ProductViewModel).Date.ToString(@"M/d/yyyy"))
+                            </Template>
+                        </GridColumn>
+                        <GridColumn Field="@(nameof(ProductViewModel.BuyCount))" Title="تعداد فروش" />
+                    </GridColumns>
+                </TelerikGrid>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <TelerikChart>
+                        <ChartSeriesItems>
+                            <ChartSeries Type="ChartSeriesType.Donut" Data="@ProductDataByCategory"
+                                         Field="@nameof(ProductViewModel.BuyCount)" CategoryField="@nameof(ProductViewModel.Category)">
+                                <ChartSeriesLabels Visible="true"
+                                                   Position="@ChartSeriesLabelsPosition.OutsideEnd"
+                                                   Template="#=category#"
+                                                   Background="transparent">
+                                    <ChartSeriesTooltip Visible="true">
+                                        <Template>
+                                            @context.Percentage.ToString("P2") use @context.Category
+                                            <br />
+                                            تعداد خریداری شده: @( (context.DataItem as ProductViewModel).BuyCount.ToString("N0") )
+                                        </Template>
+                                    </ChartSeriesTooltip>
+                                </ChartSeriesLabels>
+                            </ChartSeries>
+                            <ChartLegend Position="Telerik.Blazor.ChartLegendPosition.Bottom">
+                            </ChartLegend>
+                        </ChartSeriesItems>
+
+                    </TelerikChart>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <TelerikChart>
+                        <ChartSeriesItems>
+                            <ChartSeries Type="ChartSeriesType.Donut" Data="@ProductDataByName"
+                                         Field="@nameof(ProductViewModel.BuyCount)" CategoryField="@nameof(ProductViewModel.Category)">
+                                <ChartSeriesLabels Visible="false"
+                                                   Position="@ChartSeriesLabelsPosition.OutsideEnd"
+                                                   Template="#=category#"
+                                                   Background="transparent">
+                                    <ChartSeriesTooltip Visible="true">
+                                        <Template>
+                                            @context.Percentage.ToString("P2") use @context.Category
+                                            <br />
+                                            تعداد خریداری شده: @((context.DataItem as ProductViewModel).BuyCount.ToString("N0") )
+                                        </Template>
+                                    </ChartSeriesTooltip>
+                                </ChartSeriesLabels>
+                            </ChartSeries>
+                        </ChartSeriesItems>
+                        <ChartLegend Visible="false" />
+                    </TelerikChart>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+@code{
+    public IEnumerable<ProductViewModel> ListBuys { get; set; }
+    public decimal MonthEarning { get; set; }
+    public decimal YearEarning { get; set; }
+    public int CountBuy { get; set; }
+    public int Total { get; set; }
+    public IEnumerable<ProductViewModel> ProductDataByName { get; set; }
+    public IEnumerable<ProductViewModel> ProductDataByCategory { get; set; }
+    public string LabelsRotation = "auto";
+    protected override async Task OnInitializedAsync()
+    {
+        ListBuys =await dashboardServive.AllBuys();
+        MonthEarning = await dashboardServive.GetEarning(true);
+        YearEarning = await dashboardServive.GetEarning(false);
+        CountBuy = await dashboardServive.BuyMaterial();
+        Total = ListBuys.Count();
+        ProductDataByCategory = await dashboardServive.ProductData(true);
+        ProductDataByName = await dashboardServive.ProductData(false);
+    }
+
+}
